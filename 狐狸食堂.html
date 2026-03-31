@@ -24,7 +24,6 @@
             margin: 0 auto;
         }
 
-        /* 头部 */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -43,7 +42,6 @@
             margin-top: 4px;
         }
 
-        
         .mode-switch {
             display: flex;
             gap: 12px;
@@ -70,7 +68,6 @@
             box-shadow: 0 2px 8px rgba(217, 158, 94, 0.2);
         }
 
-        
         .menu-view, .order-view {
             transition: 0.2s;
         }
@@ -78,7 +75,6 @@
             display: none;
         }
 
-        
         .categories {
             display: flex;
             gap: 12px;
@@ -105,7 +101,6 @@
             color: white;
         }
 
-        
         .menu-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -169,7 +164,6 @@
             font-weight: bold;
         }
 
-        
         .order-only-container {
             background: white;
             border-radius: 32px;
@@ -208,21 +202,25 @@
             align-items: center;
             padding: 14px 0;
             border-bottom: 1px solid #f7e9df;
+            gap: 12px;
+            flex-wrap: wrap;
         }
         .order-item-info {
             flex: 2;
+            min-width: 120px;
         }
         .order-item-name {
             font-weight: 600;
             font-size: 1rem;
         }
         .order-item-price {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: #b47c56;
             margin-top: 2px;
         }
         .order-item-detail {
             text-align: right;
+            min-width: 80px;
         }
         .order-item-qty {
             font-weight: 600;
@@ -230,9 +228,54 @@
             color: #d99e5e;
         }
         .order-item-subtotal {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #a1653a;
             margin-top: 2px;
+        }
+        /* 操作按钮组：增加/减少/删除 */
+        .order-item-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .qty-control-btn {
+            background: #fff0e8;
+            border: 1px solid #f0cdb5;
+            border-radius: 40px;
+            padding: 6px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #b95f2c;
+            cursor: pointer;
+            transition: 0.1s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .qty-control-btn:active {
+            background: #f7ded0;
+            transform: scale(0.96);
+        }
+        .delete-single-btn {
+            background: #fff0e8;
+            border: 1px solid #f0cdb5;
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #b95f2c;
+            cursor: pointer;
+            transition: 0.1s;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .delete-single-btn:active {
+            background: #f7ded0;
+            transform: scale(0.96);
         }
         .order-footer {
             border-top: 1px solid #eedbcb;
@@ -257,7 +300,6 @@
             font-size: 0.9rem;
         }
 
-        
         .sync-bar {
             display: flex;
             justify-content: center;
@@ -325,21 +367,34 @@
             cursor: pointer;
             text-align: center;
         }
+        @media (max-width: 480px) {
+            .order-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .order-item-detail {
+                text-align: left;
+                width: 100%;
+            }
+            .order-item-actions {
+                width: 100%;
+                justify-content: flex-start;
+                margin-top: 6px;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="app-container">
     <div class="header">
         <h1>狐狸🦊食堂</h1>
-        <div class="sub"></div>
+        <div class="sub">· 爱心料理 · </div>
     </div>
 
-    
     <div class="mode-switch">
         <div class="mode-btn active" data-mode="menu">📖 浏览菜单 & 点菜</div>
-        <div class="mode-btn" data-mode="order">📋 查看已点清单 (只读)</div>
+        <div class="mode-btn" data-mode="order">📋 已点清单 (加减/删除)</div>
     </div>
-
 
     <div class="sync-bar">
         <button class="sync-btn" id="exportShareBtn">📤 分享订单码 (同步给家人)</button>
@@ -347,11 +402,8 @@
         <button class="sync-btn" id="clearAllBtn">🗑️ 清空全部</button>
     </div>
 
-    
     <div id="menuView" class="menu-view">
-      
         <div class="categories" id="categoriesContainer"></div>
-        
         <div class="menu-grid" id="menuGrid"></div>
         <div class="action-buttons">
             <div class="btn-secondary" id="quickResetBtn">🔄 重置我的点单</div>
@@ -373,7 +425,6 @@
                     <span class="total-price" id="totalPriceOnly">0</span>
                 </div>
                 <div style="font-size:0.7rem; color:#b28b6a; text-align:center; margin-top:8px;">
-                    📌 此页面仅展示已点菜品，修改菜品请切换至「浏览菜单」视图
                 </div>
             </div>
         </div>
@@ -381,15 +432,15 @@
 
     <div class="share-panel">
         💡 <strong>记得把分享码给🦊哦！！！</strong><br>
-        🔄 <strong>输入🦊的分享码看看他给你准备的饭哦</strong>
+        🔄 <strong>输入🦊的分享码看看他给你准备的饭哦</strong><br>
+        
     </div>
-    <footer>看看今天吃什么</footer>
 </div>
 <div id="toastMsg" class="toast"></div>
 
 <script>
-   
-    const MENU = [
+  
+    const MENU_RAW = [
         { id: "d1", name: "🍅 番茄牛腩", price: 58, category: "热菜", emoji: "🍲", desc: "软烂入味，酸甜开胃" },
         { id: "d2", name: "🐟 烤鱼（在学）", price: 68, category: "热菜", emoji: "🐟", desc: "鲜嫩少刺，原汁原味" },
         { id: "d3", name: "🥬 蚝油生菜", price: 22, category: "素菜", emoji: "🥬", desc: "脆嫩清爽" },
@@ -403,21 +454,27 @@
         { id: "d11", name: "🍢 羊肉串 (3串)", price: 36, category: "热菜", emoji: "🍢", desc: "孜然香气" },
         { id: "d12", name: "🥒 拍黄瓜", price: 16, category: "凉菜", emoji: "🥒", desc: "蒜香爽口" },
         { id: "d13", name: "🍅 番茄炒蛋", price: 16, category: "热菜", emoji: "🍅", desc: "酸甜可口" },
-		{ id: "d14", name: "🍜 凉皮", price: 16, category: "主食", emoji: "🍜", desc: "清爽开胃" },
-		{ id: "d15", name: "🍎 苹果", price: 16, category: "水果", emoji: "🍎", desc: "一天一苹果，医生远离我" },
+        { id: "d14", name: "🍜 凉皮", price: 16, category: "主食", emoji: "🍜", desc: "清爽开胃" },
+        { id: "d15", name: "🍎 苹果", price: 16, category: "水果", emoji: "🍎", desc: "一天一苹果，医生远离我" }
     ];
-
- 
-    const categoriesSet = ["全部", ...new Set(MENU.map(d => d.category))];
+    const FINAL_MENU = [];
+    const idSet = new Set();
+    for (let dish of MENU_RAW) {
+        if (!idSet.has(dish.id)) {
+            idSet.add(dish.id);
+            FINAL_MENU.push(dish);
+        }
+    }
+    
+    const categoriesSet = ["全部", ...new Set(FINAL_MENU.map(d => d.category))];
     let currentCategory = "全部";
     
-    
-    let orderMap = new Map();
+    // 订单状态
+    let orderMap = new Map();   // dishId -> quantity
     const STORAGE_KEY = "family_order_split_view";
- 
     let currentView = 'menu';
     
- 
+    // ---------- 存储 & 渲染核心 ----------
     function loadOrderFromStorage() {
         const stored = localStorage.getItem(STORAGE_KEY);
         if (stored) {
@@ -426,7 +483,7 @@
                 orderMap.clear();
                 if (typeof parsed === 'object') {
                     for (let [id, qty] of Object.entries(parsed)) {
-                        if (qty > 0 && MENU.some(d => d.id === id)) orderMap.set(id, qty);
+                        if (qty > 0 && FINAL_MENU.some(d => d.id === id)) orderMap.set(id, qty);
                     }
                 }
             } catch(e) { console.warn(e); }
@@ -438,14 +495,13 @@
         const obj = {};
         for (let [id, qty] of orderMap.entries()) obj[id] = qty;
         localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
-     
         window.dispatchEvent(new CustomEvent('order-updated-split', { detail: obj }));
         renderAllViews();
     }
     
- 
+    // 核心数量修改：delta可为 +1 或 -1
     function updateDishQuantity(dishId, delta) {
-        const dish = MENU.find(d => d.id === dishId);
+        const dish = FINAL_MENU.find(d => d.id === dishId);
         if (!dish) return;
         const currentQty = orderMap.get(dishId) || 0;
         let newQty = currentQty + delta;
@@ -455,7 +511,26 @@
             orderMap.set(dishId, newQty);
         }
         persistOrder();
-        showToast(delta > 0 ? `➕ ${dish.name} x${newQty}` : `➖ ${dish.name} 剩余${newQty || '已移除'}`, 700);
+        const qtyNow = orderMap.get(dishId) || 0;
+        const actionIcon = delta > 0 ? '➕' : '➖';
+        if (qtyNow === 0) {
+            showToast(`🗑️ 已移除 ${dish.name}`, 700);
+        } else {
+            showToast(`${actionIcon} ${dish.name} x${qtyNow}`, 700);
+        }
+    }
+    
+    // 整份删除 (一键清除该菜品)
+    function deleteEntireDish(dishId) {
+        const dish = FINAL_MENU.find(d => d.id === dishId);
+        if (!dish) return;
+        if (!orderMap.has(dishId)) {
+            showToast(`❓ ${dish.name} 不在清单中`, 800);
+            return;
+        }
+        orderMap.delete(dishId);
+        persistOrder();
+        showToast(`🗑️ 已删除「${dish.name}」`, 1000);
     }
     
     function clearAllOrders() {
@@ -471,14 +546,13 @@
         showToast("🔄 菜单已重置", 800);
     }
     
-    // 生成分享码 (base64)
+    // 分享与导入
     function generateShareCode() {
         const orderObj = {};
         for (let [id, qty] of orderMap.entries()) orderObj[id] = qty;
         const jsonStr = JSON.stringify(orderObj);
         return btoa(encodeURIComponent(jsonStr));
     }
-    
     
     function applyShareCode(code) {
         try {
@@ -487,7 +561,7 @@
             if (typeof importedOrder !== 'object') throw new Error();
             let addedCount = 0;
             for (let [id, qty] of Object.entries(importedOrder)) {
-                if (qty > 0 && MENU.some(d => d.id === id)) {
+                if (qty > 0 && FINAL_MENU.some(d => d.id === id)) {
                     const current = orderMap.get(id) || 0;
                     const newQty = current + qty;
                     if (newQty > 0) {
@@ -528,16 +602,16 @@
         else showToast("未输入同步码", 800);
     }
     
-  
+    // 渲染所有视图
     function renderAllViews() {
-        renderMenuView();      
-        renderOrderOnlyView();  
+        renderMenuView();
+        renderOrderOnlyView();
     }
     
- 
+    // 菜单视图：分类 + 菜品卡片 (点击 +1)
     function renderMenuView() {
         renderCategories();
-        const filtered = currentCategory === "全部" ? MENU : MENU.filter(d => d.category === currentCategory);
+        const filtered = currentCategory === "全部" ? FINAL_MENU : FINAL_MENU.filter(d => d.category === currentCategory);
         const grid = document.getElementById('menuGrid');
         if (!grid) return;
         grid.innerHTML = filtered.map(dish => `
@@ -554,7 +628,6 @@
             </div>
         `).join('');
         
- 
         document.querySelectorAll('#menuGrid .dish-card').forEach(card => {
             card.addEventListener('click', (e) => {
                 e.stopPropagation();
@@ -573,12 +646,12 @@
         document.querySelectorAll('.cat-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 currentCategory = btn.dataset.cat;
-                renderMenuView();   
+                renderMenuView();
             });
         });
     }
     
-    
+ 
     function renderOrderOnlyView() {
         const container = document.getElementById('orderOnlyList');
         const totalSpan = document.getElementById('totalPriceOnly');
@@ -595,35 +668,66 @@
         let total = 0;
         const items = [];
         for (let [id, qty] of orderMap.entries()) {
-            const dish = MENU.find(d => d.id === id);
+            const dish = FINAL_MENU.find(d => d.id === id);
             if (!dish) continue;
             const subtotal = dish.price * qty;
             total += subtotal;
-            items.push({ dish, qty, subtotal });
+            items.push({ dish, qty, subtotal, id });
         }
         
+        // 渲染订单列表，每个菜品带 加/减/删除 按钮
         const html = `
             <ul class="order-list">
                 ${items.map(item => `
-                    <li class="order-item">
+                    <li class="order-item" data-dish-id="${item.id}">
                         <div class="order-item-info">
                             <div class="order-item-name">${item.dish.name}</div>
                             <div class="order-item-price">${item.dish.price} / 份</div>
                         </div>
                         <div class="order-item-detail">
                             <div class="order-item-qty">✖️ ${item.qty}</div>
-                            <div class="order-item-subtotal">❤️${item.subtotal}</div>
+                            <div class="order-item-subtotal">❤️ ${item.subtotal}</div>
+                        </div>
+                        <div class="order-item-actions">
+                            <button class="qty-control-btn increment-btn" data-id="${item.id}" data-delta="1">➕ 加一份</button>
+                            <button class="qty-control-btn decrement-btn" data-id="${item.id}" data-delta="-1">➖ 减一份</button>
+                            <button class="delete-single-btn" data-id="${item.id}">❌ 整份删除</button>
                         </div>
                     </li>
                 `).join('')}
             </ul>
         `;
         container.innerHTML = html;
+        
+    
+        document.querySelectorAll('#orderOnlyList .increment-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dishId = btn.getAttribute('data-id');
+                if (dishId) updateDishQuantity(dishId, 1);
+            });
+        });
+ 
+        document.querySelectorAll('#orderOnlyList .decrement-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dishId = btn.getAttribute('data-id');
+                if (dishId) updateDishQuantity(dishId, -1);
+            });
+        });
+ 
+        document.querySelectorAll('#orderOnlyList .delete-single-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const dishId = btn.getAttribute('data-id');
+                if (dishId) deleteEntireDish(dishId);
+            });
+        });
+        
         if (totalSpan) totalSpan.innerText = `❤${total}`;
         if (statsSpan) statsSpan.innerText = `${items.length}种菜品`;
     }
     
-  
     function showToast(msg, duration = 1500) {
         const toast = document.getElementById('toastMsg');
         toast.innerText = msg;
@@ -632,7 +736,6 @@
             toast.style.opacity = '0';
         }, duration);
     }
-    
     
     function setView(view) {
         currentView = view;
@@ -647,7 +750,6 @@
                 if (btn.dataset.mode === 'menu') btn.classList.add('active');
                 else btn.classList.remove('active');
             });
-        
             renderMenuView();
         } else {
             menuViewDiv.classList.add('hidden');
@@ -656,11 +758,11 @@
                 if (btn.dataset.mode === 'order') btn.classList.add('active');
                 else btn.classList.remove('active');
             });
-            renderOrderOnlyView();   
+            renderOrderOnlyView();
         }
     }
     
-  
+    // 跨标签页同步
     function setupCrossTabSync() {
         window.addEventListener('order-updated-split', (e) => {
             if (e.detail) {
@@ -670,7 +772,6 @@
                     if (qty > 0) orderMap.set(id, qty);
                 }
                 renderAllViews();
-               
                 if (currentView === 'order') renderOrderOnlyView();
             }
         });
@@ -689,9 +790,7 @@
         });
     }
     
-   
     function bindEvents() {
-        
         document.querySelectorAll('.mode-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const mode = btn.dataset.mode;
@@ -715,7 +814,7 @@
         loadOrderFromStorage();
         bindEvents();
         setupCrossTabSync();
-        setView('menu'); 
+        setView('menu');
     }
     
     init();
